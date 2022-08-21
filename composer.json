@@ -1,0 +1,20 @@
+{
+    "name": "mendescode/orm",
+    "description": "Simple ORM to use on my own projects",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mendesCode",
+            "email": "lucasbarins7@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

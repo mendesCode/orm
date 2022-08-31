@@ -16,6 +16,8 @@
     },
     "require": {
         "php": ">=7.4",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-pgsql": "*",
+        "vlucas/phpdotenv": "^5.4"
     }
 }

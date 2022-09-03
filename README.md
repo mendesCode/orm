@@ -3,7 +3,7 @@
 ### Description
 
 This project provides a database abstraction written in pure PHP
-using PDO and PostgreSQL as the database driver.
+using the PDO extension and PostgreSQL as the database driver.
 
 ### Requirements
 

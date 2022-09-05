@@ -16,9 +16,14 @@ abstract class Model
         }
     }
 
+    /**
+     * Get the table associated with the model
+     *
+     * @return string
+     */
     public function getTable(): string
     {
-        if (!empty($this->table)) {
+        if (isset($this->table)) {
             return $this->table;
         }
 
@@ -27,10 +32,23 @@ abstract class Model
         return Str::tableize($model);
     }
 
+    /**
+     * Set the table associated with the model
+     *
+     * @param string $table
+     * @return $this
+     */
     public function setTable(string $table): self
     {
         $this->table = $table;
 
         return $this;
+    }
+
+    public static function all($select = '*', $options = []): ?array
+    {
+        $query = 'SELECT (';
+
+        return null;
     }
 }

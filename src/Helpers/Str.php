@@ -42,16 +42,36 @@ class Str
      */
     public static function tableize(string $word): string
     {
-        $plural = static::inflector()->pluralize($word);
-        $table = preg_replace('/(?<=\\w)([A-Z])/u', '_$1', $plural);
+        $plural = static::pluralize($word);
 
-        return mb_strtolower($table);
+        return static::underscore($plural);
     }
 
     // TODO: must implement this method
     public static function classify(string $word): string
     {
         return '';
+    }
+
+    /**
+     * Converts strings from kebab-case, PascalCase or camelCase to underscore
+     *
+     * @param string $word The string to be underscored
+     * @return string
+     */
+    public static function underscore(string $word): string
+    {
+        if (strpos($word, '-') !== false) {
+            return mb_strtolower(str_replace('-', '_', $word));
+        }
+
+        if ($word == mb_strtolower($word)) {
+            return $word;
+        }
+
+        $underscored = preg_replace('/(?<=\\w)([A-Z])/u', '_$1', $word);
+
+        return mb_strtolower($underscored);
     }
 
     /**

@@ -9,6 +9,7 @@ use PDO;
 
 class Connection
 {
+    /** @var PDO The object that represents a connection to the database */
     private static $connection;
 
     public static function getInstance(): ?PDO
@@ -24,7 +25,7 @@ class Connection
              */
             static::$connection = new PDO(static::getDSN());
         } catch (\PDOException $e) {
-            return null;
+            throw new \Exception($e->getMessage()); // TODO: change the Exception to a custom exception class
         }
 
         return static::$connection;

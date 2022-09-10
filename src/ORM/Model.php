@@ -9,6 +9,9 @@ abstract class Model
     /** @var string The database table associated with the model  */
     protected string $table;
 
+    /** @var Query The query object that will run the queries associated with this model */
+    protected static Query $queryBuilder;
+
     public function __construct()
     {
         if (!isset($this->table)) {
@@ -45,10 +48,27 @@ abstract class Model
         return $this;
     }
 
-    public static function all($select = '*', $options = []): ?array
+    public static function builder(): Query
     {
-        $query = 'SELECT (';
+        if (isset(static::$queryBuilder)) {
+            return static::$queryBuilder;
+        }
 
-        return null;
+        static::$queryBuilder = new Query(new static());
+
+        return static::$queryBuilder;
+    }
+
+    public static function all($select = ['*'], array $options = []): ?array
+    {
+        if (empty($select)) {
+            $select = ['*'];
+        }
+
+        if (!is_array($select)) {
+            $select = [$select];
+        }
+
+        return static::builder()->select($select, $options);
     }
 }

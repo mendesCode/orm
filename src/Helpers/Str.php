@@ -35,7 +35,7 @@ class Str
     }
 
     /**
-     * Converts $word to the format used by database tables
+     * Convert $word to the format used by database tables
      *
      * @param string $word The model name to be tableized
      * @return string
@@ -54,7 +54,7 @@ class Str
     }
 
     /**
-     * Converts strings from kebab-case, PascalCase or camelCase to underscore
+     * Convert strings from kebab-case, PascalCase or camelCase to underscore
      *
      * @param string $word The string to be underscored
      * @return string

@@ -25,7 +25,7 @@ class Connection
              */
             static::$connection = new PDO(static::getDSN());
         } catch (\PDOException $e) {
-            throw new \Exception($e->getMessage()); // TODO: change the Exception to a custom exception class
+            throw new \Exception($e->getMessage()); // TODO: change the Exception to a custom exception class, e.g. DatabaseException
         }
 
         return static::$connection;

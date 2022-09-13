@@ -9,10 +9,16 @@ abstract class Model
     /** @var string The database table associated with the model  */
     protected string $table;
 
-    /** @var Query The query object that will run the queries associated with this model */
+    /** @var array An associative array containing the columns and values of a database record */
+    private array $attributes = [];
+
+    /** @var array A list with all the modified and not persisted attributes */
+    private array $dirty = [];
+
+    /** @var Query A query builder object that will run the queries associated with this model */
     protected static Query $queryBuilder;
 
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
         if (!isset($this->table)) {
             $this->table = $this->getTable();
@@ -48,27 +54,97 @@ abstract class Model
         return $this;
     }
 
-    public static function builder(): Query
+    /**
+     * Get the list of attributes marked as dirty
+     *
+     * @return array
+     */
+    public function dirty(): array
     {
-        if (isset(static::$queryBuilder)) {
-            return static::$queryBuilder;
+        return $this->dirty;
+    }
+
+    /**
+     * Set one or more attributes as dirty
+     *
+     * @param string|string[] $attributes
+     * @return $this
+     */
+    public function setDirty($attributes): self
+    {
+        if (!$attributes) {
+            return $this;
         }
 
-        static::$queryBuilder = new Query(new static());
+        if (!is_array($attributes)) {
+            $attributes = [$attributes];
+        }
 
-        return static::$queryBuilder;
+        $attributes = array_filter($attributes, function ($field) {
+            return in_array($field, array_keys($this->attributes));
+        });
+
+        foreach ($attributes as $attribute) {
+            if (in_array($attribute, $this->dirty)) {
+                continue;
+            }
+
+            $this->dirty[] = $attribute;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks if one or more attributes are marked as dirty, if at least one is dirty, returns true
+     *
+     * @param string|string[] $attributes The value or values to be checked
+     * @return bool
+     */
+    public function isDirty($attributes = null): bool
+    {
+        if (empty($attributes)) {
+            return count($this->dirty) > 0;
+        }
+
+        if (!is_array($attributes)) {
+            $attributes = [$attributes];
+        }
+
+        foreach ($attributes as $attribute) {
+            if (in_array($attribute, $this->dirty)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function all($select = ['*'], array $options = []): ?array
     {
-        if (empty($select)) {
-            $select = ['*'];
-        }
+        return null;
+    }
 
-        if (!is_array($select)) {
-            $select = [$select];
-        }
+    public function get(string $name)
+    {
+        return $this->attributes[$name] ?? null;
+    }
 
-        return static::builder()->select($select, $options);
+    public function set(string $name, $value): self
+    {
+        $this->attributes[$name] = $value;
+        $this->setDirty($name);
+
+        return $this;
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->set($name, $value);
     }
 }

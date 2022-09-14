@@ -10,10 +10,14 @@ abstract class Model
     protected string $table;
 
     /** @var array An associative array containing the columns and values of a database record */
-    private array $attributes = [];
+    protected array $attributes = [];
+
+    protected array $fillable = [];
+
+    protected array $guarded = ['*'];
 
     /** @var array A list with all the modified and not persisted attributes */
-    private array $dirty = [];
+    protected array $dirty = [];
 
     /** @var Query A query builder object that will run the queries associated with this model */
     protected static Query $queryBuilder;
@@ -118,6 +122,33 @@ abstract class Model
         }
 
         return false;
+    }
+
+    public function fill(array $attributes, array $options = []): self
+    {
+        if (empty($this->fillable) && $this->guarded == ['*']) {
+            return $this;
+        }
+
+        $fillable = array_keys($attributes);
+
+        if (!empty($this->fillable)) {
+            $fillable = $this->fillable;
+        }
+
+        if (!empty($this->guarded) && $this->guarded != ['*']) {
+            $fillable = array_diff($fillable, $this->guarded);
+        }
+
+        foreach ($attributes as $key => $value) {
+            if (!in_array($key, $fillable)) {
+                continue;
+            }
+
+            $this->set($key, $value);
+        }
+
+        return $this;
     }
 
     public static function all($select = ['*'], array $options = []): ?array

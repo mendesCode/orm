@@ -153,7 +153,9 @@ abstract class Model
 
     public static function all($select = ['*'], array $options = []): ?array
     {
-        return null;
+        $model = new static();
+
+        return (new Query($model))->select($select, $options);
     }
 
     public function get(string $name)

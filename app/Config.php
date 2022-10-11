@@ -6,10 +6,13 @@ use Dotenv\Dotenv;
 
 class Config
 {
+    /** @var bool Tells whether the configuration data has been loaded or not */
     protected static bool $loaded = false;
+
+    /** @var array The data loaded from .env */
     private static array $data;
 
-    public static function load(string $path = null)
+    public static function load(string $path = null): bool
     {
         if (!$path) {
             $path = dirname(__DIR__);

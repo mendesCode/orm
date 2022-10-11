@@ -2,12 +2,12 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\Models\User;
+use App\Models\Planet;
 
-$user = new User();
-
-$user->fill([
-    'first_name' => 'Lucas',
-    'last_name' => 'Mendes',
-    'email' => 'lucas@mail.com'
+Planet::all(['planet_id', 'name', 'type'], [
+    'where' => [
+        'star_id IS NOT NULL',
+        'planet_id' => 2,
+        'name' => 'Earth'
+    ]
 ]);

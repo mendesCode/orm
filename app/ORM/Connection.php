@@ -6,11 +6,12 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Config;
 use PDO;
+use PDOException;
 
 class Connection
 {
     /** @var PDO The object that represents a connection to the database */
-    private static $connection;
+    private static PDO $connection;
 
     public static function getInstance(): ?PDO
     {
@@ -24,7 +25,7 @@ class Connection
              * This project does not support MySQL/MariaDB connections yet
              */
             static::$connection = new PDO(static::getDSN());
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new \Exception($e->getMessage()); // TODO: change the Exception to a custom exception class, e.g. DatabaseException
         }
 
@@ -39,7 +40,7 @@ class Connection
             'host' => Config::read('DB_HOST'),
             'port' => Config::read('DB_PORT'),
             'dbname' => Config::read('DB_DATABASE'),
-            'user' => Config::read('DB_USER'),
+            'user' => Config::read('DB_USERNAME'),
             'password' => Config::read('DB_PASSWORD')
         ];
         $params = array_filter($params);
